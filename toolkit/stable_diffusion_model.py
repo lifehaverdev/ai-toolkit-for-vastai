@@ -93,6 +93,11 @@ DO_NOT_TRAIN_WEIGHTS = [
 
 DeviceStatePreset = Literal['cache_latents', 'generate']
 
+def prepare_unet_for_training(model):
+    """Prepare model for training"""
+    model.enable_gradient_checkpointing()
+    model.gradient_checkpointing_kwargs = {"use_reentrant": False}
+    return model
 
 class BlankNetwork:
 
@@ -553,6 +558,9 @@ class StableDiffusion:
                 # low_cpu_mem_usage=False,
                 # device_map=None
             )
+            #claude toldme add this 
+            transformer.enable_gradient_checkpointing()
+            transformer.gradient_checkpointing_kwargs = {"use_reentrant": False}
             # hack in model gpu splitter
             if self.model_config.split_model_over_gpus:
                 add_model_gpu_splitter_to_flux(transformer)
@@ -806,7 +814,13 @@ class StableDiffusion:
         pipe.scheduler = self.noise_scheduler
 
         # add hacks to unet to help training
-        # pipe.unet = prepare_unet_for_training(pipe.unet)
+        pipe.unet = prepare_unet_for_training(pipe.unet)
+
+        #claude wanted to tdo the following but nah
+        #if self.is_flux:
+        #    self.unet = prepare_unet_for_training(pipe.transformer)
+        #else:
+        #    self.unet = pipe.unet
 
         if self.is_pixart or self.is_v3 or self.is_auraflow or self.is_flux:
             # pixart and sd3 dont use a unet
