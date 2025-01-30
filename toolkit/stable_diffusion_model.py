@@ -814,7 +814,7 @@ class StableDiffusion:
         pipe.scheduler = self.noise_scheduler
 
         # add hacks to unet to help training
-        pipe.unet = prepare_unet_for_training(pipe.unet)
+        #pipe.unet = prepare_unet_for_training(pipe.unet)
 
         #claude wanted to tdo the following but nah
         #if self.is_flux:
