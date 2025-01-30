@@ -550,16 +550,20 @@ class StableDiffusion:
                 # if we have the te, this folder is a full checkpoint, use it as the base
                 if os.path.exists(te_folder_path):
                     base_model_path = model_path
-
+            print(f"Loading Flux model from: {transformer_path}")
+            print(f"HF Token valid: {len(os.environ.get('HUGGINGFACE_TOKEN', '')) > 0}")
             transformer = FluxTransformer2DModel.from_pretrained(
                 transformer_path,
                 subfolder=subfolder,
                 torch_dtype=dtype,
                 # low_cpu_mem_usage=False,
                 # device_map=None
-                revision="main",  # Add this line
-                local_files_only=False,  # Add this to force new download
-                resume_download=True,    # Add this to handle timeouts
+                revision="main",
+                resume_download=True,
+                timeout=300,  # Much longer timeout
+                max_retries=5,  # Add retries
+                use_auth_token=True,  # Explicitly use auth token
+                mirror="https://hf-mirror.com",  # Try using mirror
             )
             #claude toldme add this 
             transformer.enable_gradient_checkpointing()
