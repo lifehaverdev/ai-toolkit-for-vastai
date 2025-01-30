@@ -558,16 +558,16 @@ class StableDiffusion:
                 torch_dtype=dtype,
                 # low_cpu_mem_usage=False,
                 # device_map=None
-                #revision="main",
-                #resume_download=True,
-                #timeout=300,  # Much longer timeout
-                #max_retries=5,  # Add retries
-                #use_auth_token=True,  # Explicitly use auth token
-                #mirror="https://hf-mirror.com",  # Try using mirror
+                revision="main",
+                resume_download=True,
+                timeout=300,  # Much longer timeout
+                max_retries=5,  # Add retries
+                use_auth_token=True,  # Explicitly use auth token
+                mirror="https://hf-mirror.com",  # Try using mirror
             )
             #claude toldme add this 
-            #transformer.enable_gradient_checkpointing()
-            #transformer.gradient_checkpointing_kwargs = {"use_reentrant": False}
+            transformer.enable_gradient_checkpointing()
+            transformer.gradient_checkpointing_kwargs = {"use_reentrant": False}
             # hack in model gpu splitter
             if self.model_config.split_model_over_gpus:
                 add_model_gpu_splitter_to_flux(transformer)
