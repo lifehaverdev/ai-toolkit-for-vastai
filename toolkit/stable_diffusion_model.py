@@ -557,6 +557,9 @@ class StableDiffusion:
                 torch_dtype=dtype,
                 # low_cpu_mem_usage=False,
                 # device_map=None
+                revision="main",  # Add this line
+                local_files_only=False,  # Add this to force new download
+                resume_download=True,    # Add this to handle timeouts
             )
             #claude toldme add this 
             transformer.enable_gradient_checkpointing()
